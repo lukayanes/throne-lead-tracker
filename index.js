@@ -39,10 +39,12 @@ export default {
 
           console.log("Zillow response:", zdata);
 
-          zestimate = zdata?.property?.zestimate || "";
-          listed = zdata?.property?.homeStatus || "";
-          latitude = zdata?.property?.latitude || "";
-          longitude = zdata?.property?.longitude || "";
+          const prop = zdata.property || zdata;
+
+          zestimate = prop?.zestimate || "";
+          listed = prop?.homeStatus || "";
+          latitude = prop?.latitude || "";
+          longitude = prop?.longitude || "";
         } catch (err) {
           console.log("Zillow lookup failed:", err);
         }
