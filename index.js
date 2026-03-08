@@ -9,6 +9,34 @@ export default {
 
       const body = await request.json();
 
+                /* =========================================
+          GET ZILLOW ZESTIMATE
+          ========================================= */
+          
+          let zestimate = "";
+          
+          try {
+          
+            const zillow = await fetch(
+              `https://zillow-com1.p.rapidapi.com/propertyExtendedSearch?location=${encodeURIComponent(body.address)}`,
+              {
+                headers: {
+                  "X-RapidAPI-Key": env.ZILLOW_KEY,
+                  "X-RapidAPI-Host": "zillow-com1.p.rapidapi.com"
+                }
+              }
+            );
+
+  const zdata = await zillow.json();
+
+  zestimate = zdata?.props?.[0]?.zestimate || "";
+
+} catch (err) {
+
+  console.log("Zillow lookup failed", err);
+
+}
+
       console.log("Incoming Lead:", body);
 
       const now = new Date();
