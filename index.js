@@ -24,53 +24,49 @@ export default {
         geo.country
       ].filter(Boolean).join(", ");
 
-      const url = lead.url || request.headers.get("referer") || "";
-
       const row = [
 
-        now.toLocaleString(),                // Date
-        lead.name || "",                     // Name
-        lead.address || "",                  // Address
-        lead.phone || "",                    // PhoneNumber
-        lead.email || "",                    // Email
+        now.toLocaleString(),                  // Date
+        lead.name || "",                       // Name
+        lead.address || "",                    // Address
+        lead.phone || "",                      // Phone
+        lead.email || "",                      // Email
 
-        "",                                  // blank spacer
-        "",                                  // blank spacer
-        "",                                  // blank spacer
+        "", "", "",                            // empty spacer columns
 
-        lead.motivation_scale || "Unknown",  // Motivation Scale
-        lead.disposition || "Lead",          // Disposition
-        lead.deal_spread || "",              // Deal Spread
-        lead.contract_date || "",            // Contract Date
-        lead.notes || "",                    // Notes
-        lead.motivation || "",               // Motivation
-        lead.asking_price || "",             // AskingPrice
-        lead.listed || "",                   // Listed
-        lead.zestimate || "",                // Zestimate
-        lead.status || "Lead",               // Status
+        "",                                    // Motivation Scale
+        "Lead",                                // Disposition
+        "",                                    // Deal Spread
+        "",                                    // Contract Date
+        "",                                    // Notes
+        "",                                    // Motivation
+        "",                                    // Asking Price
+        "",                                    // Listed
+        "",                                    // Zestimate
+        "Lead",                                // Status
 
-        geolocation,                         // Geolocation
-        "",                                  // Geo <100 (optional logic later)
+        geolocation,                           // Geolocation
+        "",                                    // Geo <100
 
-        lead.utm_source || "",               // utm_source
-        lead.utm_campaign_name || "",        // utm_campaign_name
-        lead.utm_campaign || "",             // utm_campaign
-        lead.utm_adgroup || "",              // utm_adgroup
-        lead.utm_ad || "",                   // utm_ad
-        lead.utm_term || "",                 // utm_term
-        lead.utm_matchtype || "",            // utm_matchtype
-        lead.utm_device || "",               // utm_device
-        lead.utm_bid || "",                  // utm_bid
+        lead.utm_source || "",
+        lead.utm_campaign || "",
+        lead.utm_campaign || "",
+        lead.utm_adgroup || "",
+        "",
+        lead.utm_term || "",
+        "",
+        lead.utm_device || "",
+        "",
 
-        ip,                                  // IP
-        lead.utm_acct || "Throne Holdings",  // utm_acct
+        ip,
+        "Throne Holdings",
 
-        lead.gclid || "",                    // GCLID
-        url,                                 // URL
-        lead.wbraid || "",                   // WBRAID
-        lead.gbraid || "",                   // GBRAID
+        lead.gclid || "",
+        lead.url || "",
+        lead.wbraid || "",
+        lead.gbraid || "",
 
-        now.toISOString()                    // Google Time
+        now.toISOString()
 
       ];
 
@@ -93,7 +89,9 @@ export default {
       return new Response("Lead stored");
 
     } catch (err) {
+
       return new Response(err.toString(), { status: 500 });
+
     }
 
   }
