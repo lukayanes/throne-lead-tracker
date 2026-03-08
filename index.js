@@ -151,7 +151,7 @@ export default {
         "";
 
       const row = [
-        now.toLocaleString(), // Date
+        new Date().toLocaleString("en-US", { timeZone: "America/Chicago" }), // Date (CST)
         body.name || "", // Name
         address, // Address
         body.phone || "", // PhoneNumber
