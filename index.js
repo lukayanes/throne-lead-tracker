@@ -64,7 +64,7 @@ export default {
         "",                                  // Motivation
         "",                                  // AskingPrice
         "",                                  // Listed
-        "",                                  // Zestimate
+        zestimate,                                  // Zestimate
         "",                              // Status
 
         "",                                  // Geolocation
