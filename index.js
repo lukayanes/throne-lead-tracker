@@ -13,6 +13,46 @@ export default {
       console.log("Incoming Lead:", body);
       console.log("Resolved address:", address);
 
+      const address = body.address || "";
+
+console.log("Incoming Lead:", body);
+console.log("Resolved address:", address);
+
+        /* =========================================
+           GEOCODE ADDRESS (GET LAT / LON)
+        ========================================= */
+        
+        let latitude = "";
+        let longitude = "";
+        
+        if (address) {
+        
+          try {
+        
+            const geo = await fetch(
+              `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`,
+              {
+                headers: {
+                  "User-Agent": "ThroneHoldingsLeadSystem"
+                }
+              }
+            );
+        
+            const gdata = await geo.json();
+        
+            if (gdata && gdata.length > 0) {
+              latitude = gdata[0].lat;
+              longitude = gdata[0].lon;
+            }
+        
+            console.log("Geocoded lat/lon:", latitude, longitude);
+        
+          } catch(err) {
+            console.log("Geocode failed:", err);
+          }
+        
+        }
+
       /* =========================================
          GET ZILLOW DATA (ZLLW Working API)
       ========================================= */
@@ -40,7 +80,7 @@ export default {
           console.log("Zillow response:", zdata);
 
           const prop = zdata.property || zdata;
-          console.log("Zillow lat/lon:", prop?.latitude, prop?.longitude);
+          
 
           zestimate = prop?.zestimate || "";
           listed = prop?.homeStatus || "";
