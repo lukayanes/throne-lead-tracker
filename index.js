@@ -40,6 +40,7 @@ export default {
           console.log("Zillow response:", zdata);
 
           const prop = zdata.property || zdata;
+          console.log("Zillow lat/lon:", prop?.latitude, prop?.longitude);
 
           zestimate = prop?.zestimate || "";
           listed = prop?.homeStatus || "";
