@@ -11,62 +11,45 @@ export default {
 
       const now = new Date();
 
-      const ip =
-        request.headers.get("cf-connecting-ip") ||
-        request.headers.get("x-forwarded-for") ||
-        "";
-
-      const geo = request.cf || {};
-
-      const geolocation = [
-        geo.city,
-        geo.region,
-        geo.country
-      ].filter(Boolean).join(", ");
-
       const row = [
 
-        now.toLocaleString(),                  // Date
-        lead.name || "",                       // Name
-        lead.address || "",                    // Address
-        lead.phone || "",                      // Phone
-        lead.email || "",                      // Email
+        now.toLocaleString(),             // Date
+        lead.name || "",                  // Name
+        lead.address || "",               // Address
+        lead.phone || "",                 // PhoneNumber
+        lead.email || "",                 // Email
 
-        "", "", "",                            // empty spacer columns
+        lead.motivation_scale || "",      // Motivation Scale
+        lead.disposition || "Lead",       // Disposition
+        lead.deal_spread || "",           // Deal Spread
+        lead.contract_date || "",         // Contract Date
+        lead.notes || "",                 // Notes
+        lead.motivation || "",            // Motivation
+        lead.asking_price || "",          // AskingPrice
+        lead.listed || "",                // Listed
+        lead.zestimate || "",             // Zestimate
+        lead.status || "Lead",            // Status
+        lead.geolocation || "",           // Geolocation
+        lead.geo_under_100 || "",         // Geo <100
 
-        "",                                    // Motivation Scale
-        "Lead",                                // Disposition
-        "",                                    // Deal Spread
-        "",                                    // Contract Date
-        "",                                    // Notes
-        "",                                    // Motivation
-        "",                                    // Asking Price
-        "",                                    // Listed
-        "",                                    // Zestimate
-        "Lead",                                // Status
+        lead.utm_source || "",            // utm_source
+        lead.utm_campaign_name || "",     // utm_campaign_name
+        lead.utm_campaign || "",          // utm_campaign
+        lead.utm_adgroup || "",           // utm_adgroup
+        lead.utm_ad || "",                // utm_ad
+        lead.utm_term || "",              // utm_term
+        lead.utm_matchtype || "",         // utm_matchtype
+        lead.utm_device || "",            // utm_device
+        lead.utm_bid || "",               // utm_bid
+        lead.ip || "",                    // IP
+        lead.utm_acct || "",              // utm_acct
 
-        geolocation,                           // Geolocation
-        "",                                    // Geo <100
+        lead.gclid || "",                 // GCLID
+        lead.url || "",                   // URL
+        lead.wbraid || "",                // WBRAID
+        lead.gbraid || "",                // GBRAID
 
-        lead.utm_source || "",
-        lead.utm_campaign || "",
-        lead.utm_campaign || "",
-        lead.utm_adgroup || "",
-        "",
-        lead.utm_term || "",
-        "",
-        lead.utm_device || "",
-        "",
-
-        ip,
-        "Throne Holdings",
-
-        lead.gclid || "",
-        lead.url || "",
-        lead.wbraid || "",
-        lead.gbraid || "",
-
-        now.toISOString()
+        now.toISOString()                 // Google Time
 
       ];
 
@@ -96,3 +79,117 @@ export default {
 
   }
 };
+
+
+
+/* GET GOOGLE ACCESS TOKEN */
+
+async function getAccessToken(env) {
+
+  const jwt = await createJWT(env);
+
+  const res = await fetch(
+    "https://oauth2.googleapis.com/token",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type":
+          "application/x-www-form-urlencoded"
+      },
+      body:
+        `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`
+    }
+  );
+
+  const data = await res.json();
+
+  return data.access_token;
+
+}
+
+
+
+/* CREATE JWT */
+
+async function createJWT(env) {
+
+  const header = {
+    alg: "RS256",
+    typ: "JWT"
+  };
+
+  const now = Math.floor(Date.now() / 1000);
+
+  const payload = {
+    iss: env.CLIENT_EMAIL,
+    scope: "https://www.googleapis.com/auth/spreadsheets",
+    aud: "https://oauth2.googleapis.com/token",
+    exp: now + 3600,
+    iat: now
+  };
+
+  const encode = obj =>
+    btoa(JSON.stringify(obj))
+      .replace(/=/g, "")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_");
+
+  const unsigned =
+    `${encode(header)}.${encode(payload)}`;
+
+
+  const key = await crypto.subtle.importKey(
+    "pkcs8",
+    pemToArrayBuffer(env.PRIVATE_KEY),
+    {
+      name: "RSASSA-PKCS1-v1_5",
+      hash: "SHA-256"
+    },
+    false,
+    ["sign"]
+  );
+
+
+  const signature = await crypto.subtle.sign(
+    "RSASSA-PKCS1-v1_5",
+    key,
+    new TextEncoder().encode(unsigned)
+  );
+
+
+  const signed =
+    btoa(String.fromCharCode(...new Uint8Array(signature)))
+      .replace(/=/g, "")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_");
+
+  return `${unsigned}.${signed}`;
+
+}
+
+
+
+/* FIX PRIVATE KEY FORMAT */
+
+function pemToArrayBuffer(pem) {
+
+  pem = pem.replace(/\\n/g, '\n').trim();
+
+  const base64 = pem
+    .replace(/-----BEGIN PRIVATE KEY-----/, "")
+    .replace(/-----END PRIVATE KEY-----/, "")
+    .replace(/\s+/g, "");
+
+  const binary = atob(base64);
+
+  const buffer = new ArrayBuffer(binary.length);
+
+  const view = new Uint8Array(buffer);
+
+  for (let i = 0; i < binary.length; i++) {
+    view[i] = binary.charCodeAt(i);
+  }
+
+  return buffer;
+
+}
