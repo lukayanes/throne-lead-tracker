@@ -1,0 +1,9 @@
+name = "throne-lead-tracker"
+main = "index.js"
+compatibility_date = "2026-03-08"
+
+workers_dev = true
+
+[vars]
+SHEET_ID = "1KETyy9S0JdxfDOUoX4klrvQQRKSBCGOConkluIe4q34"
+CLIENT_EMAIL = "throne-sheets-worker@throneholdingsgroup.iam.gserviceaccount.com"
