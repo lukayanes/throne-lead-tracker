@@ -15,6 +15,8 @@ export default {
             
             let zestimate = "";
             let listed = "";
+            let latitude = "";
+            let longitude = "";
             
             try {
             
@@ -44,7 +46,37 @@ export default {
               console.log("Zillow lookup failed:", err);
             
             }
+
+
+                    /* =========================================
+              GEO CHECK AGAINST MAJOR CITIES
+              ========================================= */
               
+              let geoLocation = "";
+              let geoUnder100 = "Fail";
+              
+              if (latitude && longitude) {
+              
+                geoLocation = `${latitude}, ${longitude}`;
+              
+                for (const city of majorCities) {
+              
+                  const dist = distanceMiles(
+                    latitude,
+                    longitude,
+                    city.lat,
+                    city.lon
+                  );
+              
+                  if (dist <= 100) {
+                    geoUnder100 = "Pass";
+                    break;
+                  }
+              
+                }
+              
+              }
+                            
       console.log("Incoming Lead:", body);
 
       const now = new Date();
@@ -252,36 +284,7 @@ function distanceMiles(lat1, lon1, lat2, lon2) {
 
 }
 
-/* =========================================
-GEO CHECK AGAINST MAJOR CITIES
-========================================= */
 
-let geoLocation = "";
-let geoUnder100 = "Fail";
-
-if (latitude && longitude) {
-
-  geoLocation = `${latitude}, ${longitude}`;
-
-  for (const city of majorCities) {
-
-    const dist = distanceMiles(
-      latitude,
-      longitude,
-      city.lat,
-      city.lon
-    );
-
-    if (dist <= 100) {
-
-      geoUnder100 = "Pass";
-      break;
-
-    }
-
-  }
-
-}
 
 
 /* =========================================
