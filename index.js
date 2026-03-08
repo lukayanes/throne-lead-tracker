@@ -77,11 +77,16 @@ now.toISOString() // Google Time
 
     } catch (err) {
 
-      console.error(err);
+  console.error("Worker Error:", err);
 
-      return new Response("ERROR");
+  return new Response(
+    JSON.stringify({
+      error: err.toString()
+    }),
+    { status: 500 }
+  );
 
-    }
+}
 
   }
 };
