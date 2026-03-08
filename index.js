@@ -15,8 +15,6 @@ export default {
 
       const address = body.address || "";
 
-console.log("Incoming Lead:", body);
-console.log("Resolved address:", address);
 
         /* =========================================
            GEOCODE ADDRESS (GET LAT / LON)
@@ -59,8 +57,7 @@ console.log("Resolved address:", address);
 
       let zestimate = "";
       let listed = "";
-      let latitude = "";
-      let longitude = "";
+     
 
       if (address) {
         try {
