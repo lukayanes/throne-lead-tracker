@@ -13,70 +13,49 @@ export default {
 
       const row = [
 
-        now.toLocaleString(),
+now.toLocaleString(), // Date
+body.name || "", // Name
+body.address || "", // Address
+body.phone || "", // PhoneNumber
+body.email || "", // Email
 
-        body.name || "",
-        body.address || "",
-        body.phone || "",
-        body.email || "",
+"", "", "", "", "", // spacer columns
 
-        "", "", "", "", "",
+"", // Motivation Scale
+"Lead", // Disposition
+"", // Deal Spread
+"", // Contract Date
+"", // Notes
+"", // Motivation
+"", // AskingPrice
+"", // Listed
+"", // Zestimate
+"Lead", // Status
 
-        "",
+"", // Geolocation
+"", // Geo <100
 
-        "Lead",
+body.utm_source || "",
+body.utm_campaign || "",
+body.utm_campaign || "",
+body.utm_adgroup || "",
+"", // utm_ad
+body.utm_term || "",
+"", // utm_matchtype
+body.utm_device || "",
+"", // utm_bid
 
-        "",
+request.headers.get("cf-connecting-ip") || "", // IP
+"Throne Holdings", // utm_acct
 
-        "",
+body.gclid || "", // GCLID
+body.url || "", // URL
+body.wbraid || "", // WBRAID
+body.gbraid || "", // GBRAID
 
-        "",
+now.toISOString() // Google Time
 
-        "",
-
-        "",
-
-        "",
-
-        "Lead",
-
-        "",
-
-        "",
-
-        body.utm_source || "",
-
-        body.utm_campaign || "",
-
-        body.utm_campaign || "",
-
-        body.utm_adgroup || "",
-
-        "",
-
-        body.utm_term || "",
-
-        "",
-
-        body.utm_device || "",
-
-        "",
-
-        request.headers.get("cf-connecting-ip") || "",
-
-        "Throne Holdings",
-
-        body.gclid || "",
-
-        body.url || "",
-
-        body.wbraid || "",
-
-        body.gbraid || "",
-
-        now.toISOString()
-
-      ];
+];
 
       const token = await getAccessToken(env);
 
