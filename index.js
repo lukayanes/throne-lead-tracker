@@ -7,65 +7,80 @@ export default {
 
     try {
 
-      const lead = await request.json();
-
-      console.log("LEAD RECEIVED:", lead);
+      const body = await request.json();
 
       const now = new Date();
-
-      const ip =
-        request.headers.get("cf-connecting-ip") ||
-        "";
-
-      const geo = request.cf || {};
-
-      const geolocation = [
-        geo.city,
-        geo.region,
-        geo.country
-      ].filter(Boolean).join(", ");
 
       const row = [
 
         now.toLocaleString(),
-        lead.name || "",
-        lead.address || "",
-        lead.phone || "",
-        lead.email || "",
 
-        "", "", "",
+        body.name || "",
+        body.address || "",
+        body.phone || "",
+        body.email || "",
+
+        "", "", "", "", "",
 
         "",
-        "Lead",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
+
         "Lead",
 
-        geolocation,
         "",
 
-        lead.utm_source || "",
-        lead.utm_campaign || "",
-        lead.utm_campaign || "",
-        lead.utm_adgroup || "",
-        "",
-        lead.utm_term || "",
-        "",
-        lead.utm_device || "",
         "",
 
-        ip,
-        "Throne Holdings",
+        "",
 
-        lead.gclid || "",
-        lead.url || "",
-        lead.wbraid || "",
-        lead.gbraid || "",
+        "",
+
+        "",
+
+        "",
+
+        "Lead",
+
+        "",
+
+        "",
+
+        "Lead",
+
+        now.toISOString(),
+
+        "",
+
+        "USD",
+
+        "",
+
+        body.utm_source || "",
+
+        body.utm_campaign || "",
+
+        body.utm_campaign || "",
+
+        body.utm_adgroup || "",
+
+        "",
+
+        body.utm_term || "",
+
+        "",
+
+        body.utm_device || "",
+
+        "",
+
+        "",
+
+        body.gclid || "",
+
+        body.url || "",
+
+        body.wbraid || "",
+
+        body.gbraid || "",
 
         now.toISOString()
 
@@ -73,7 +88,7 @@ export default {
 
       const token = await getAccessToken(env);
 
-      const res = await fetch(
+      await fetch(
         `https://sheets.googleapis.com/v4/spreadsheets/${env.SHEET_ID}/values/A1:append?valueInputOption=USER_ENTERED`,
         {
           method: "POST",
@@ -87,15 +102,9 @@ export default {
         }
       );
 
-      const text = await res.text();
-
-      console.log("Sheets response:", text);
-
       return new Response("Lead stored");
 
     } catch (err) {
-
-      console.error(err);
 
       return new Response(err.toString(), { status: 500 });
 
