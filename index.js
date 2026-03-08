@@ -13,7 +13,6 @@ export default {
       console.log("Incoming Lead:", body);
       console.log("Resolved address:", address);
 
-      const address = body.address || "";
 
 
         /* =========================================
