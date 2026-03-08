@@ -43,8 +43,17 @@ export default {
 
           zestimate = prop?.zestimate || "";
           listed = prop?.homeStatus || "";
-          latitude = prop?.latitude || "";
-          longitude = prop?.longitude || "";
+          latitude =
+            prop?.latitude ||
+            prop?.address?.latitude ||
+            prop?.address?.lat ||
+            "";
+          
+          longitude =
+            prop?.longitude ||
+            prop?.address?.longitude ||
+            prop?.address?.lon ||
+            "";
         } catch (err) {
           console.log("Zillow lookup failed:", err);
         }
@@ -52,30 +61,60 @@ export default {
         console.log("No address provided in payload, skipping Zillow lookup");
       }
 
-      /* =========================================
-         GEO CHECK AGAINST MAJOR CITIES
-      ========================================= */
-
-      let geoLocation = "";
-      let geoUnder100 = "Fail";
-
-      if (latitude && longitude) {
-        geoLocation = `${latitude}, ${longitude}`;
-
-        for (const city of majorCities) {
-          const dist = distanceMiles(
-            Number(latitude),
-            Number(longitude),
-            city.lat,
-            city.lon
-          );
-
-          if (dist <= 100) {
-            geoUnder100 = "Pass";
-            break;
+             /* =========================================
+           GEO LOCATION + CITY / STATE / COUNTY
+        ========================================= */
+        
+        let geoLocation = "";
+        let geoUnder100 = "Fail";
+        
+        if (latitude && longitude) {
+        
+          try {
+        
+            const geo = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
+              {
+                headers: {
+                  "User-Agent": "ThroneHoldingsLeadSystem"
+                }
+              }
+            );
+        
+            const gdata = await geo.json();
+        
+            const city =
+              gdata.address.city ||
+              gdata.address.town ||
+              gdata.address.village ||
+              "";
+        
+            const state = gdata.address.state || "";
+            const county = gdata.address.county || "";
+        
+            geoLocation = `${city}, ${state}, ${county}`;
+        
+          } catch(err) {
+            console.log("Geo lookup failed:", err);
           }
+        
+          for (const city of majorCities) {
+        
+            const dist = distanceMiles(
+              Number(latitude),
+              Number(longitude),
+              city.lat,
+              city.lon
+            );
+        
+            if (dist <= 100) {
+              geoUnder100 = "Pass";
+              break;
+            }
+        
+          }
+        
         }
-      }
 
       const now = new Date();
 
