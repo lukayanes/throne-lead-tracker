@@ -29,7 +29,7 @@ export default {
         "", "", "", "", "",                  // spacer columns
 
         "",                                  // Motivation Scale
-        "Lead",                              // Disposition
+        "",                              // Disposition
         "",                                  // Deal Spread
         "",                                  // Contract Date
         "",                                  // Notes
@@ -37,7 +37,7 @@ export default {
         "",                                  // AskingPrice
         "",                                  // Listed
         "",                                  // Zestimate
-        "Lead",                              // Status
+        "",                              // Status
 
         "",                                  // Geolocation
         "",                                  // Geo <100
