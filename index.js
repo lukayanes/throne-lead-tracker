@@ -14,6 +14,7 @@ export default {
             ========================================= */
             
             let zestimate = "";
+            let listed = "";
             
             try {
             
@@ -32,7 +33,8 @@ export default {
             
               console.log("Zillow response:", zdata);
             
-              zestimate = zdata?.zestimate || "";
+              zestimate = zdata?.property?.zestimate || "";
+              listed = zdata?.property?.homeStatus || "";
             
             } catch (err) {
             
@@ -68,7 +70,7 @@ export default {
         "",                                  // AskingPrice
         "",                                  // Listed
         zestimate,                                  // Zestimate
-        "",                              // Status
+        listed,                              // Status
 
         "",                                  // Geolocation
         "",                                  // Geo <100
@@ -91,7 +93,7 @@ export default {
         body.wbraid || "",                   // WBRAID
         body.gbraid || "",                   // GBRAID
 
-        now.toISOString()                    // Google Time
+        formatGoogleTime(now)                   // Google Time
 
       ];
 
@@ -137,6 +139,25 @@ export default {
   }
 };
 
+/* =========================================
+FORMAT GOOGLE ADS TIME
+========================================= */
+
+function formatGoogleTime(date) {
+
+  const pad = n => n.toString().padStart(2, "0");
+
+  const year = date.getUTCFullYear();
+  const month = pad(date.getUTCMonth() + 1);
+  const day = pad(date.getUTCDate());
+
+  const hours = pad(date.getUTCHours());
+  const minutes = pad(date.getUTCMinutes());
+  const seconds = pad(date.getUTCSeconds());
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}+00:00`;
+
+}
 
 /* =========================================
 GOOGLE ACCESS TOKEN
