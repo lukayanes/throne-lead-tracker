@@ -175,7 +175,7 @@ export default {
 
         body.utm_source || "",
         body.utm_campaign || "",
-        body.utm_campaign || "",
+      
         body.utm_adgroup || "",
         "", // utm_ad
         body.utm_term || "",
