@@ -81,17 +81,7 @@ export default {
 
           zestimate = prop?.zestimate || "";
           listed = prop?.homeStatus || "";
-          latitude =
-            prop?.latitude ||
-            prop?.address?.latitude ||
-            prop?.address?.lat ||
-            "";
-          
-          longitude =
-            prop?.longitude ||
-            prop?.address?.longitude ||
-            prop?.address?.lon ||
-            "";
+         
         } catch (err) {
           console.log("Zillow lookup failed:", err);
         }
