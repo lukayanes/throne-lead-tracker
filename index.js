@@ -44,16 +44,6 @@ export default {
 
         "",
 
-        "Lead",
-
-        now.toISOString(),
-
-        "",
-
-        "USD",
-
-        "",
-
         body.utm_source || "",
 
         body.utm_campaign || "",
@@ -72,7 +62,9 @@ export default {
 
         "",
 
-        "",
+        request.headers.get("cf-connecting-ip") || "",
+
+        "Throne Holdings",
 
         body.gclid || "",
 
@@ -102,11 +94,13 @@ export default {
         }
       );
 
-      return new Response("Lead stored");
+      return new Response("OK");
 
     } catch (err) {
 
-      return new Response(err.toString(), { status: 500 });
+      console.error(err);
+
+      return new Response("ERROR");
 
     }
 
