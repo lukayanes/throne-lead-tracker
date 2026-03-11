@@ -164,9 +164,9 @@ export default {
         "", // Deal Spread
         "", // Contract Date
         "", // Notes
-        "", // Motivation
-        "", // AskingPrice
-        "", // Listed
+        body.motivation || "", // Motivation
+        body.asking_price || "", // AskingPrice
+        body.listed || "", // Listed
         zestimate, // Zestimate
         listed, // Status
 
